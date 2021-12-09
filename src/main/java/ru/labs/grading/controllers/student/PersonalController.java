@@ -1,4 +1,4 @@
-package ru.labs.client.controllers.student;
+package ru.labs.grading.controllers.student;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +12,8 @@ import java.util.UUID;
 public class PersonalController {
 
     @GetMapping("personal")
-    public String getAverageRating() {
-        return "123";
+    public String getAverageRating(@RequestParam String taskId) {
+        return "123" + taskId;
     }
 
 
