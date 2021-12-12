@@ -1,0 +1,22 @@
+syntax = "proto3";
+//option java_multiple_files = true;
+package ru.labs.grading;
+
+//
+//service FileOwnService {
+//  rpc loadOwnFile (stream DataChunk) returns (FileOwnResponse);
+//}
+
+
+service FileOwnService {
+  rpc loadOwnFile (stream FileOwnRequest) returns (FileOwnResponse);
+}
+
+message FileOwnRequest {
+  bytes data = 1;
+  string fullName = 2;
+}
+
+message FileOwnResponse {
+  string taskId = 1;
+}
