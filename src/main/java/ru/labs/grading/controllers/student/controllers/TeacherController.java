@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.labs.grading.controllers.student.dto.Evaluation;
-import ru.labs.grading.controllers.student.dto.LoadedWork;
+import ru.labs.grading.controllers.student.dto.EvaluationDTO;
+import ru.labs.grading.controllers.student.dto.LoadedWorkDTO;
 import ru.labs.grading.controllers.student.services.TeacherService;
 
 import java.io.ByteArrayOutputStream;
@@ -30,8 +30,8 @@ public class TeacherController {
 
 
     //получить спиок всех загруженных работ
-    @GetMapping
-    public List<LoadedWork> getListLoadedWork() {
+    @GetMapping("works")
+    public List<LoadedWorkDTO> getListLoadedWork() {
         return null;
     }
 
@@ -48,7 +48,7 @@ public class TeacherController {
 
     //получить все полученые оценки по конкретной работе
     @GetMapping("appraisers")
-    public List<Evaluation> getListEvaluationTask(@RequestParam String taskId) {
+    public List<EvaluationDTO> getListEvaluationTask(@RequestParam String taskId) {
         return null;
     }
 

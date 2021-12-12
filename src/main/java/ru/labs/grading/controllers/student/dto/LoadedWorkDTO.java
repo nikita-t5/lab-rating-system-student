@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Evaluation {
+public class LoadedWorkDTO {
     private String taskId;
-    private String appraiserFullName;
-    private int rating;
+    private String developerFullName;
 }

@@ -25,19 +25,19 @@ public class TeacherServiceImpl implements TeacherService {
         this.managedChannel = managedChannel;
     }
 
-    @Override
-    public void sayBye() {
-        ByeServiceGrpc.ByeServiceBlockingStub stub =
-                ByeServiceGrpc.newBlockingStub(managedChannel);
-
-        ByeServiceOuterClass.ByeRequest request = ByeServiceOuterClass.ByeRequest
-                .newBuilder()
-                .setByeName("Bye, Ivan")
-                .build();
-
-        ByeServiceOuterClass.ByeResponse response = stub.byeGreeting(request);
-        System.out.println(response);
-    }
+//    @Override
+//    public void sayBye() {
+//        ByeServiceGrpc.ByeServiceBlockingStub stub =
+//                ByeServiceGrpc.newBlockingStub(managedChannel);
+//
+//        ByeServiceOuterClass.ByeRequest request = ByeServiceOuterClass.ByeRequest
+//                .newBuilder()
+//                .setByeName("Bye, Ivan")
+//                .build();
+//
+//        ByeServiceOuterClass.ByeResponse response = stub.byeGreeting(request);
+//        System.out.println(response);
+//    }
 
 
     @Override

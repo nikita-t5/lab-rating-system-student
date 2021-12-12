@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.labs.grading.*;
 
+import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -92,18 +94,21 @@ public class StudentServiceImpl implements StudentService {
         FileUploadServiceGrpc.FileUploadServiceStub stub = FileUploadServiceGrpc.newStub(managedChannel);
         StreamObserver<FileUploadRequest> streamObserver = stub.uploadFile(new FileUploadObserver());
 
-        Path path = Paths.get("src/main/resources/testFile");
+        //разделить название файла для выделения его типа
+        final String[] fileNameAndType = Objects.requireNonNull(file.getOriginalFilename()).split("\\."); // Разделения строки str с помощью метода split()
 
         // build metadata
         FileUploadRequest metadata = FileUploadRequest.newBuilder()
                 .setMetadata(MetaData.newBuilder()
-                        .setName("TestOutput")
-                        .setType("txt").build())
+                        .setName(fileNameAndType[0])
+                        .setType(fileNameAndType[1]).build())
                 .build();
         streamObserver.onNext(metadata);
 
         // upload bytes
-        InputStream inputStream = Files.newInputStream(path);
+        InputStream inputStream =  new BufferedInputStream(file.getInputStream());
+
+//        InputStream inputStream = Files.newInputStream(path);
         byte[] bytes = new byte[4096];
         int size;
         while ((size = inputStream.read(bytes)) > 0){

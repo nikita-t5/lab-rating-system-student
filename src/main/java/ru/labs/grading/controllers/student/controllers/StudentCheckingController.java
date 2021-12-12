@@ -5,7 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.labs.grading.controllers.student.dto.Evaluation;
+import ru.labs.grading.controllers.student.dto.EvaluationDTO;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class StudentCheckingController {
 
     //оценить работу др студента
     @PostMapping
-    public void evaluateAnotherStudentWork(@RequestBody Evaluation evaluation){
+    public void evaluateAnotherStudentWork(@RequestBody EvaluationDTO evaluationDTO){
 
     }
 }

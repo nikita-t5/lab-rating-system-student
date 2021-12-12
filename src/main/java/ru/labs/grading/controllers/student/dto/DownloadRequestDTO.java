@@ -5,11 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.File;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoadedWork {
-    private String taskId;
-    private String developerFullName;
+public class DownloadRequestDTO {
+    private File file;
+    private String fullName;
 }
