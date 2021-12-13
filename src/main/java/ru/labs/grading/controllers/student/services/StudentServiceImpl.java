@@ -11,9 +11,6 @@ import ru.labs.grading.*;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Objects;
 
 @Service
@@ -101,19 +98,21 @@ public class StudentServiceImpl implements StudentService {
         FileUploadRequest metadata = FileUploadRequest.newBuilder()
                 .setMetadata(MetaData.newBuilder()
                         .setName(fileNameAndType[0])
-                        .setType(fileNameAndType[1]).build())
+                        .setType(fileNameAndType[1])
+                        .setDeveloperFullName(developerFullName)
+                        .build())
                 .build();
         streamObserver.onNext(metadata);
 
         // upload bytes
-        InputStream inputStream =  new BufferedInputStream(file.getInputStream());
+        InputStream inputStream = new BufferedInputStream(file.getInputStream());
 
 //        InputStream inputStream = Files.newInputStream(path);
         byte[] bytes = new byte[4096];
         int size;
-        while ((size = inputStream.read(bytes)) > 0){
+        while ((size = inputStream.read(bytes)) > 0) {
             FileUploadRequest uploadRequest = FileUploadRequest.newBuilder()
-                    .setFile(File.newBuilder().setContent(ByteString.copyFrom(bytes, 0 , size)).build())
+                    .setFile(File.newBuilder().setContent(ByteString.copyFrom(bytes, 0, size)).build())
                     .build();
             streamObserver.onNext(uploadRequest);
         }
