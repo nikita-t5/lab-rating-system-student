@@ -4,6 +4,7 @@ import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,6 +14,7 @@ import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.Objects;
 
+@Slf4j
 @Service
 public class StudentServiceImpl implements StudentService {
 
@@ -50,44 +52,6 @@ public class StudentServiceImpl implements StudentService {
     @SneakyThrows
     @Override
     public String postFile(MultipartFile file, String developerFullName) {
-////        old
-////        FileOwnServiceGrpc.FileOwnServiceBlockingStub stub =
-////                FileOwnServiceGrpc.newBlockingStub(managedChannel);
-////        FileOwnServiceOuterClass.FileOwnRequest request = FileOwnServiceOuterClass.FileOwnRequest
-////                .newBuilder()
-////                .setFullName("lalala")
-////                .setData(ByteString.copyFrom(file.getBytes()))
-////                .build();
-////        FileOwnServiceOuterClass.FileOwnResponse response =
-////                stub.loadOwnFile(request);
-////        return null;
-//
-//        //new
-//        FileServiceGrpc.FileServiceStub fileServiceStub = FileServiceGrpc.newStub(managedChannel);
-//
-//        StreamObserver<FileUploadRequest> streamObserver = fileServiceStub.upload(new FileUploadObserver());
-//
-//        FileUploadRequest metadata = FileUploadRequest.newBuilder()
-//                .setMetadata(MetaData.newBuilder()
-//                        .setName("My student file")
-//                        .setType("txt").build())
-//                .build();
-//        streamObserver.onNext(metadata);
-//
-//        InputStream inputStream =  new BufferedInputStream(file.getInputStream());
-//        byte[] bytes = new byte[4096];
-//
-//        int size;
-//        while ((size = inputStream.read(bytes)) > 0){
-//            FileUploadRequest uploadRequest = FileUploadRequest.newBuilder()
-//                    .setFile(File.newBuilder().setContent(ByteString.copyFrom(bytes, 0 , size)).build())
-//                    .build();
-//            streamObserver.onNext(uploadRequest);
-//        }
-//        inputStream.close();
-//        streamObserver.onCompleted();
-//
-//
         FileUploadServiceGrpc.FileUploadServiceStub stub = FileUploadServiceGrpc.newStub(managedChannel);
         StreamObserver<FileUploadRequest> streamObserver = stub.uploadFile(new FileUploadObserver());
 
@@ -107,7 +71,6 @@ public class StudentServiceImpl implements StudentService {
         // upload bytes
         InputStream inputStream = new BufferedInputStream(file.getInputStream());
 
-//        InputStream inputStream = Files.newInputStream(path);
         byte[] bytes = new byte[4096];
         int size;
         while ((size = inputStream.read(bytes)) > 0) {
@@ -123,43 +86,21 @@ public class StudentServiceImpl implements StudentService {
     }
 
     private static class FileUploadObserver implements StreamObserver<FileUploadResponse> {
+        String taskId;
         @Override
         public void onNext(FileUploadResponse fileUploadResponse) {
-            System.out.println(
-                    "File upload status :: " + fileUploadResponse.getStatus()
-            );
+            log.info("File upload status :: {}", fileUploadResponse.getStatus());
+            taskId = fileUploadResponse.getName();
         }
 
         @Override
         public void onError(Throwable throwable) {
-            System.out.println("onError");
+            log.error("onError");
         }
 
         @Override
         public void onCompleted() {
-            System.out.println("onCompleted");
+            log.info("File with taskID :: {} on Completed", taskId);
         }
     }
-
-
-//    private static class FileUploadObserver implements StreamObserver<FileUploadResponse> {
-//        @Override
-//        public void onNext(FileUploadResponse fileUploadResponse) {
-//            System.out.println(
-//                    "File upload status :: " + fileUploadResponse.getStatus()
-//            );
-//        }
-//
-//        @Override
-//        public void onError(Throwable throwable) {
-//
-//        }
-//
-//        @Override
-//        public void onCompleted() {
-//
-//        }
-//    }
-
-
 }
