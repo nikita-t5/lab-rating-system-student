@@ -1,6 +1,7 @@
 package ru.labs.grading.controllers.student.services;
 
 import com.google.protobuf.ByteString;
+import com.google.protobuf.Empty;
 import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;
 import lombok.SneakyThrows;
@@ -28,8 +29,8 @@ public class StudentServiceImpl implements StudentService {
         this.managedChannel = managedChannel;
     }
 
-    @Override
-    public void sayHello() {
+//    @Override
+//    public void sayHello() {
         //создали канал передачи и приема данными
 //        ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:8090")
 //                .usePlaintext()
@@ -37,19 +38,19 @@ public class StudentServiceImpl implements StudentService {
 
         //создание объекта stab - на нем делаем удаленные запросы
         //stub сделает вызов метода по сети и вернет ответ
-        GreetingServiceGrpc.GreetingServiceBlockingStub stub =
-                GreetingServiceGrpc.newBlockingStub(managedChannel);
-        //создаем объект реквеста
-        GreetingServiceOuterClass.HelloRequest request = GreetingServiceOuterClass.HelloRequest
-                .newBuilder()
-                .setName("Ivan")
-                .build();
-        //удаленный вызов процедуры
-        GreetingServiceOuterClass.HelloResponse response = stub.greeting(request);
-
-        System.out.println(response);
-//        channel.shutdownNow();
-    }
+//        GreetingServiceGrpc.GreetingServiceBlockingStub stub =
+//                GreetingServiceGrpc.newBlockingStub(managedChannel);
+//        //создаем объект реквеста
+//        GreetingServiceOuterClass.HelloRequest request = GreetingServiceOuterClass.HelloRequest
+//                .newBuilder()
+//                .setName("Ivan")
+//                .build();
+//        //удаленный вызов процедуры
+//        GreetingServiceOuterClass.HelloResponse response = stub.greeting(request);
+//
+//        System.out.println(response);
+////        channel.shutdownNow();
+//    }
 
 
     @Override
@@ -57,7 +58,7 @@ public class StudentServiceImpl implements StudentService {
         MinRatingServiceGrpc.MinRatingServiceBlockingStub stub =
                 MinRatingServiceGrpc.newBlockingStub(managedChannel);
         MinRatingServiceOuterClass.MinRatingResponse response =
-                stub.getAverageRatingByTaskId(MinRatingServiceOuterClass.Empty.newBuilder().build());
+                stub.getAverageRatingByTaskId(Empty.newBuilder().build());
         return response.getTaskIdList();
     }
 

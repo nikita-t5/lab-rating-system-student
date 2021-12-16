@@ -6,8 +6,6 @@ import ru.labs.grading.controllers.student.dto.EvaluationDTO;
 import java.util.List;
 
 public interface StudentService {
-    void sayHello();
-
     String postFile(MultipartFile file, String developerFullName);
 
     String postRatingByEvaluationDTO(EvaluationDTO evaluationDTO);
