@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class EvaluationDTO {
     private String taskId;
     private String appraiserFullName;
-    private int rating;
+    private Integer rating;
 }

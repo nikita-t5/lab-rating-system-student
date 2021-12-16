@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.labs.grading.*;
+import ru.labs.grading.controllers.student.dto.EvaluationDTO;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
@@ -47,6 +48,20 @@ public class StudentServiceImpl implements StudentService {
 
         System.out.println(response);
 //        channel.shutdownNow();
+    }
+
+    @Override
+    public String postRatingByEvaluationDTO(EvaluationDTO evaluationDTO) {
+        PostRatingServiceGrpc.PostRatingServiceBlockingStub stub =
+                PostRatingServiceGrpc.newBlockingStub(managedChannel);
+        PostRatingServiceOuterClass.PostRatingRequest request = PostRatingServiceOuterClass.PostRatingRequest
+                .newBuilder()
+                .setTaskId(evaluationDTO.getTaskId())
+                .setAppraiserFullName(evaluationDTO.getAppraiserFullName())
+                .setRating(evaluationDTO.getRating())
+                .build();
+        PostRatingServiceOuterClass.PostRatingResponse response = stub.postRatingByEvaluationDto(request);
+        return response.getTaskIdResponse();
     }
 
 
@@ -93,11 +108,9 @@ public class StudentServiceImpl implements StudentService {
     }
 
     private static class FileUploadObserver implements StreamObserver<FileUploadResponse> {
-//        String taskId;
         @Override
         public void onNext(FileUploadResponse fileUploadResponse) {
             log.info("File upload status :: {}", fileUploadResponse.getStatus());
-//            taskId = fileUploadResponse.getName();
         }
 
         @Override

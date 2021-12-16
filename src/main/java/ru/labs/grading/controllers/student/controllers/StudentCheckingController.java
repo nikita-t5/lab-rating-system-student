@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.labs.grading.controllers.student.dto.EvaluationDTO;
 import ru.labs.grading.controllers.student.services.CommonService;
+import ru.labs.grading.controllers.student.services.StudentService;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
@@ -19,9 +20,12 @@ public class StudentCheckingController {
 
     private final CommonService commonService;
 
+    private final StudentService studentService;
+
     @Autowired
-    public StudentCheckingController(CommonService commonService) {
+    public StudentCheckingController(CommonService commonService, StudentService studentService) {
         this.commonService = commonService;
+        this.studentService = studentService;
     }
     //получить 3 шт taskId для оценки работы других студентов (не свою)
     @GetMapping("/task")
@@ -41,7 +45,11 @@ public class StudentCheckingController {
 
     //оценить работу др студента
     @PostMapping
-    public void evaluateAnotherStudentWork(@RequestBody EvaluationDTO evaluationDTO){
-
+    public String evaluateAnotherStudentWork(@RequestBody EvaluationDTO evaluationDTO){
+        if(evaluationDTO.getRating() < 2 || evaluationDTO.getRating() > 5){
+            return "Incorrect rating. Set rating from 2 to 5";
+        }
+        String responseFromServer = studentService.postRatingByEvaluationDTO(evaluationDTO);
+        return "you have rated the task" + responseFromServer;
     }
 }
