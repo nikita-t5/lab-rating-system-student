@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.labs.grading.controllers.student.services.CommonService;
 import ru.labs.grading.controllers.student.services.StudentService;
 
 @Slf4j
@@ -13,56 +14,26 @@ import ru.labs.grading.controllers.student.services.StudentService;
         produces = MediaType.ALL_VALUE)
 public class StudentPersonalController {
 
-
     private final StudentService studentService;
 
+    private final CommonService commonService;
+
     @Autowired
-    public StudentPersonalController(StudentService studentService) {
+    public StudentPersonalController(StudentService studentService, CommonService commonService) {
         this.studentService = studentService;
+        this.commonService = commonService;
     }
-
-    //    private final TeacherService teacherService;
-
-//    @Autowired
-//    public StudentPersonalController(StudentService studentService, TeacherService teacherService) {
-//        this.studentService = studentService;
-//        this.teacherService = teacherService;
-//    }
 
     //Получить средню оценку своей работы
     @GetMapping
     public String getAverageRating(@RequestParam String taskId) {
-        studentService.sayHello();
-        return "123" + taskId;
+        Double averageRating = commonService.getAverageRating(taskId);
+        return "For taskId " + taskId + " average rating = " + averageRating.toString();
     }
-
-
-    //потом удали это!
-//    @PostMapping("personal")
-//    public String postFileeeeeeeeeeee(@RequestParam("file") MultipartFile file) {
-//        teacherService.sayBye();
-//        return String.valueOf(UUID.randomUUID());
-//    }
-
 
     //загр файл и ФИО на сервер и получить taskID
     @PostMapping
     public String postFile(@RequestParam("file") MultipartFile file, String developerFullName) {
         return studentService.postFile(file, developerFullName);
     }
-
-
-///для теста
-//    @SneakyThrows
-//    @PostMapping("personal/load")
-//    public ResponseEntity<byte[]> postFile(@RequestParam("file") MultipartFile file, String fullName) {
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE); // (3) Content-Type: application/octet-stream
-//        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment().filename("demo-file.txt").build().toString()); // (4) Content-Disposition: attachment; filename="demo-file.txt"
-//
-////        studentService.postFile(file,fullName);
-//        return ResponseEntity.ok().headers(httpHeaders).body(file.getBytes()); // (5) Return Response
-//    }
-
-
 }

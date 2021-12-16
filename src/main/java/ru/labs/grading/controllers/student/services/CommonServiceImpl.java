@@ -40,6 +40,19 @@ public class CommonServiceImpl implements CommonService {
 
 
     @Override
+    public Double getAverageRating(String taskId) {
+        AverageRatingServiceGrpc.AverageRatingServiceBlockingStub stub =
+                AverageRatingServiceGrpc.newBlockingStub(managedChannel);
+
+        AverageRatingServiceOuterClass.AverageRatingRequest request = AverageRatingServiceOuterClass.AverageRatingRequest
+                .newBuilder()
+                .setTaskId(taskId)
+                .build();
+        AverageRatingServiceOuterClass.AverageRatingResponse response = stub.getAverageRatingByTaskId(request);
+        return response.getAverageRating();
+    }
+
+    @Override
     public ByteArrayOutputStream getStudentFile(String taskId) {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final CountDownLatch finishLatch = new CountDownLatch(1);
@@ -56,11 +69,13 @@ public class CommonServiceImpl implements CommonService {
                     onError(e);
                 }
             }
+
             @Override
             public void onError(Throwable throwable) {
                 log.error("download File error", throwable);
                 finishLatch.countDown();
             }
+
             @Override
             public void onCompleted() {
                 log.info("download File has been completed!");
