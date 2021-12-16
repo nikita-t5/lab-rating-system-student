@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoadedWorkDTO {
+public class LoadedTaskDTO {
     private String taskId;
     private String developerFullName;
 }

@@ -35,7 +35,6 @@ public class StudentCheckingController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         return ResponseEntity.ok().headers(httpHeaders).body(minRatingList);
-
     }
 
     //выгрузить работу др студента(не свою)

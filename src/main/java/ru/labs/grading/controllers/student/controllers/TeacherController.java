@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.labs.grading.controllers.student.dto.EvaluationDTO;
-import ru.labs.grading.controllers.student.dto.LoadedWorkDTO;
+import ru.labs.grading.controllers.student.dto.LoadedTaskDTO;
 import ru.labs.grading.controllers.student.services.CommonService;
+import ru.labs.grading.controllers.student.services.TeacherService;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
@@ -23,16 +24,22 @@ public class TeacherController {
 
     private final CommonService commonService;
 
+    private final TeacherService teacherService;
+
     @Autowired
-    public TeacherController(CommonService commonService) {
+    public TeacherController(CommonService commonService, TeacherService teacherService) {
         this.commonService = commonService;
+        this.teacherService = teacherService;
     }
 
 
     //получить спиок всех загруженных работ
     @GetMapping("works")
-    public List<LoadedWorkDTO> getListLoadedWork() {
-        return null;
+    public ResponseEntity<List<LoadedTaskDTO>> getListLoadedWork() {
+        List<LoadedTaskDTO> allLoadedTaskList = teacherService.getAllTask();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        return ResponseEntity.ok().headers(httpHeaders).body(allLoadedTaskList);
     }
 
     //выгрузить работу студента
