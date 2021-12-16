@@ -13,6 +13,7 @@ import ru.labs.grading.*;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.Objects;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -58,12 +59,17 @@ public class StudentServiceImpl implements StudentService {
         //разделить название файла для выделения его типа
         final String[] fileNameAndType = Objects.requireNonNull(file.getOriginalFilename()).split("\\."); // Разделения строки str с помощью метода split()
 
+        final String taskId = UUID.randomUUID().toString();
+        log.info("Start file upload with taskId :: {}", taskId);
+
+
         // build metadata
         FileUploadRequest metadata = FileUploadRequest.newBuilder()
                 .setMetadata(MetaData.newBuilder()
                         .setName(fileNameAndType[0])
                         .setType(fileNameAndType[1])
                         .setDeveloperFullName(developerFullName)
+                        .setTaskId(taskId)
                         .build())
                 .build();
         streamObserver.onNext(metadata);
@@ -82,25 +88,26 @@ public class StudentServiceImpl implements StudentService {
         // close the stream
         inputStream.close();
         streamObserver.onCompleted();
-        return null;
+        log.info("Finish file upload with taskId :: {}", taskId);
+        return taskId;
     }
 
     private static class FileUploadObserver implements StreamObserver<FileUploadResponse> {
-        String taskId;
+//        String taskId;
         @Override
         public void onNext(FileUploadResponse fileUploadResponse) {
             log.info("File upload status :: {}", fileUploadResponse.getStatus());
-            taskId = fileUploadResponse.getName();
+//            taskId = fileUploadResponse.getName();
         }
 
         @Override
         public void onError(Throwable throwable) {
-            log.error("onError");
+            log.error("upload File error", throwable);
         }
 
         @Override
         public void onCompleted() {
-            log.info("File with taskID :: {} on Completed", taskId);
+            log.info("upload File has been completed!");
         }
     }
 }

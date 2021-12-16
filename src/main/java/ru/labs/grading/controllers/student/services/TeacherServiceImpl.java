@@ -46,6 +46,7 @@ public class TeacherServiceImpl implements TeacherService {
         final CountDownLatch finishLatch = new CountDownLatch(1);
         final AtomicBoolean completed = new AtomicBoolean(false);
         final FileServiceGrpc.FileServiceStub nonBlockingStub = FileServiceGrpc.newStub(managedChannel);
+        log.info("Start download file with taskId :: {}", taskId);
         StreamObserver<DataChunk> streamObserver = new StreamObserver<DataChunk>() {
             @Override
             public void onNext(DataChunk dataChunk) {
@@ -57,13 +58,13 @@ public class TeacherServiceImpl implements TeacherService {
                 }
             }
             @Override
-            public void onError(Throwable t) {
-                log.error("downloadFile() error", t);
+            public void onError(Throwable throwable) {
+                log.error("download File error", throwable);
                 finishLatch.countDown();
             }
             @Override
             public void onCompleted() {
-                log.info("downloadFile() has been completed!");
+                log.info("download File has been completed!");
                 completed.compareAndSet(false, true);
                 finishLatch.countDown();
             }
@@ -72,7 +73,7 @@ public class TeacherServiceImpl implements TeacherService {
         try {
             DownloadFileRequest.Builder builder = DownloadFileRequest
                     .newBuilder()
-                    .setFileName(taskId);
+                    .setTaskId(taskId);
             nonBlockingStub.downloadFile(builder.build(), streamObserver);
             finishLatch.await(5, TimeUnit.MINUTES);
             if (!completed.get()) {
@@ -81,6 +82,7 @@ public class TeacherServiceImpl implements TeacherService {
         } catch (Exception e) {
             log.error("The downloadFile() method did not complete");
         }
+        log.info("Finish download file with taskId :: {}", taskId);
         return baos;
     }
 }

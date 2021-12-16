@@ -48,8 +48,7 @@ public class StudentPersonalController {
     //загр файл и ФИО на сервер и получить taskID
     @PostMapping
     public String postFile(@RequestParam("file") MultipartFile file, String developerFullName) {
-        studentService.postFile(file, developerFullName);
-        return String.valueOf(UUID.randomUUID());
+        return studentService.postFile(file, developerFullName);
     }
 
 
