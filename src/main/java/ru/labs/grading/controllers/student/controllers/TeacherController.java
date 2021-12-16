@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.labs.grading.controllers.student.dto.EvaluationDTO;
 import ru.labs.grading.controllers.student.dto.LoadedWorkDTO;
-import ru.labs.grading.controllers.student.services.TeacherService;
+import ru.labs.grading.controllers.student.services.CommonService;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
@@ -21,11 +21,11 @@ import java.util.List;
         produces = MediaType.ALL_VALUE)
 public class TeacherController {
 
-    private final TeacherService teacherService;
+    private final CommonService commonService;
 
     @Autowired
-    public TeacherController(TeacherService teacherService) {
-        this.teacherService = teacherService;
+    public TeacherController(CommonService commonService) {
+        this.commonService = commonService;
     }
 
 
@@ -41,9 +41,8 @@ public class TeacherController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE); // (3) Content-Type: application/octet-stream
         httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment().filename("demo-file.txt").build().toString());
-        ByteArrayOutputStream baos = teacherService.getStudentFile(taskId);
+        ByteArrayOutputStream baos = commonService.getStudentFile(taskId);
         return ResponseEntity.ok().headers(httpHeaders).body(baos.toByteArray()); // (5) Return Response
-//        return "123" + taskId;
     }
 
     //получить все полученые оценки по конкретной работе

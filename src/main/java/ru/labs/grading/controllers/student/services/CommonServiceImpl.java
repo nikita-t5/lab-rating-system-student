@@ -9,19 +9,18 @@ import ru.labs.grading.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 @Service
-public class TeacherServiceImpl implements TeacherService {
+public class CommonServiceImpl implements CommonService {
 
     private final ManagedChannel managedChannel;
 
     @Autowired
-    public TeacherServiceImpl(ManagedChannel managedChannel) {
+    public CommonServiceImpl(ManagedChannel managedChannel) {
         this.managedChannel = managedChannel;
     }
 

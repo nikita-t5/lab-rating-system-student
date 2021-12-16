@@ -2,7 +2,7 @@ package ru.labs.grading.controllers.student.services;
 
 import java.io.ByteArrayOutputStream;
 
-public interface TeacherService {
+public interface CommonService {
 //    void sayBye();
     ByteArrayOutputStream getStudentFile(String taskId);
 }
