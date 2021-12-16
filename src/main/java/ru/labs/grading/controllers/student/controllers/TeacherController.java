@@ -54,8 +54,12 @@ public class TeacherController {
 
     //получить все полученые оценки по конкретной работе
     @GetMapping("appraisers")
-    public List<EvaluationDTO> getListEvaluationTask(@RequestParam String taskId) {
-        return null;
+    public ResponseEntity<List<EvaluationDTO>> getListEvaluationTask(@RequestParam String taskId) {
+        List<EvaluationDTO> allEvaluationList = teacherService.getAllEvaluation(taskId);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        return ResponseEntity.ok().headers(httpHeaders).body(allEvaluationList);
+
     }
 
     @GetMapping("rating")

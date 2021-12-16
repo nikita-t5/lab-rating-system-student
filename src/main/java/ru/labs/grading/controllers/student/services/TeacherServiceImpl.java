@@ -4,10 +4,11 @@ import com.google.protobuf.Empty;
 import io.grpc.ManagedChannel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.labs.grading.MinRatingServiceGrpc;
-import ru.labs.grading.MinRatingServiceOuterClass;
+import ru.labs.grading.EvaluationTaskServiceGrpc;
+import ru.labs.grading.EvaluationTaskServiceOuterClass;
 import ru.labs.grading.TaskServiceGrpc;
 import ru.labs.grading.TaskServiceOuterClass;
+import ru.labs.grading.controllers.student.dto.EvaluationDTO;
 import ru.labs.grading.controllers.student.dto.LoadedTaskDTO;
 
 import java.util.ArrayList;
@@ -23,16 +24,31 @@ public class TeacherServiceImpl implements TeacherService {
         this.managedChannel = managedChannel;
     }
 
+    @Override
+    public List<EvaluationDTO> getAllEvaluation(String taskId) {
+        List<EvaluationDTO> evaluationDTOList = new ArrayList<>();
+        EvaluationTaskServiceGrpc.EvaluationTaskServiceBlockingStub stub =
+                EvaluationTaskServiceGrpc.newBlockingStub(managedChannel);
+        EvaluationTaskServiceOuterClass.EvaluationRequest request = EvaluationTaskServiceOuterClass.EvaluationRequest
+                .newBuilder()
+                .setTaskId(taskId)
+                .build();
+        EvaluationTaskServiceOuterClass.EvaluationResponse response = stub.getAllEvaluationTask(request);
+        List<EvaluationTaskServiceOuterClass.Evaluation> evaluationList = response.getEvaluationList();
+        for (EvaluationTaskServiceOuterClass.Evaluation evaluation : evaluationList) {
+            evaluationDTOList.add(new EvaluationDTO(evaluation.getTaskId(), evaluation.getAppraiserFullName(), evaluation.getRating()));
+        }
+        return evaluationDTOList;
+    }
 
     @Override
     public List<LoadedTaskDTO> getAllTask() {
         List<LoadedTaskDTO> allTask = new ArrayList<>();
         TaskServiceGrpc.TaskServiceBlockingStub stub =
                 TaskServiceGrpc.newBlockingStub(managedChannel);
-        TaskServiceOuterClass.TaskListResponse response =
-                stub.getAllTask(Empty.newBuilder().build());
+        TaskServiceOuterClass.TaskListResponse response = stub.getAllTask(Empty.newBuilder().build());
         List<TaskServiceOuterClass.Task> taskListResponse = response.getTaskList();
-        for (TaskServiceOuterClass.Task task: taskListResponse){
+        for (TaskServiceOuterClass.Task task : taskListResponse) {
             allTask.add(new LoadedTaskDTO(task.getTaskId(), task.getDeveloperFullName()));
         }
         return allTask;
