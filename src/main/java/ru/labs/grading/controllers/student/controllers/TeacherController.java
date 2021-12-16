@@ -52,9 +52,8 @@ public class TeacherController {
     }
 
     @GetMapping("rating")
-    public Double getAverageRating(@RequestParam String taskId) {
-        return null;
+    public String getAverageRating(@RequestParam String taskId) {
+        Double averageRating = commonService.getAverageRating(taskId);
+        return "For taskId " + taskId + " average rating = " + averageRating.toString();
     }
-
-
 }

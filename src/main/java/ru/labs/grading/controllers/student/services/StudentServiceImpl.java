@@ -13,6 +13,7 @@ import ru.labs.grading.controllers.student.dto.EvaluationDTO;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -48,6 +49,16 @@ public class StudentServiceImpl implements StudentService {
 
         System.out.println(response);
 //        channel.shutdownNow();
+    }
+
+
+    @Override
+    public List<String> getMinRatingTask() {
+        MinRatingServiceGrpc.MinRatingServiceBlockingStub stub =
+                MinRatingServiceGrpc.newBlockingStub(managedChannel);
+        MinRatingServiceOuterClass.MinRatingResponse response =
+                stub.getAverageRatingByTaskId(MinRatingServiceOuterClass.Empty.newBuilder().build());
+        return response.getTaskIdList();
     }
 
     @Override

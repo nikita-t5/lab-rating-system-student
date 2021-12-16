@@ -27,10 +27,15 @@ public class StudentCheckingController {
         this.commonService = commonService;
         this.studentService = studentService;
     }
+
     //получить 3 шт taskId для оценки работы других студентов (не свою)
     @GetMapping("/task")
-    public List<String> getListTaskId() {
-        return null;
+    public ResponseEntity<List<String>> getMinRatingTaskIdList() {
+        List<String> minRatingList = studentService.getMinRatingTask();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        return ResponseEntity.ok().headers(httpHeaders).body(minRatingList);
+
     }
 
     //выгрузить работу др студента(не свою)
@@ -45,8 +50,8 @@ public class StudentCheckingController {
 
     //оценить работу др студента
     @PostMapping
-    public String evaluateAnotherStudentWork(@RequestBody EvaluationDTO evaluationDTO){
-        if(evaluationDTO.getRating() < 2 || evaluationDTO.getRating() > 5){
+    public String evaluateAnotherStudentWork(@RequestBody EvaluationDTO evaluationDTO) {
+        if (evaluationDTO.getRating() < 2 || evaluationDTO.getRating() > 5) {
             return "Incorrect rating. Set rating from 2 to 5";
         }
         String responseFromServer = studentService.postRatingByEvaluationDTO(evaluationDTO);
