@@ -46,10 +46,10 @@ public class TeacherController {
     @GetMapping
     public ResponseEntity<byte[]> getStudentFile(@RequestParam String taskId) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE); // (3) Content-Type: application/octet-stream
+        httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
         httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment().filename("demo-file.txt").build().toString());
         ByteArrayOutputStream baos = commonService.getStudentFile(taskId);
-        return ResponseEntity.ok().headers(httpHeaders).body(baos.toByteArray()); // (5) Return Response
+        return ResponseEntity.ok().headers(httpHeaders).body(baos.toByteArray());
     }
 
     //получить все полученые оценки по конкретной работе
@@ -59,7 +59,6 @@ public class TeacherController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         return ResponseEntity.ok().headers(httpHeaders).body(allEvaluationList);
-
     }
 
     @GetMapping("rating")

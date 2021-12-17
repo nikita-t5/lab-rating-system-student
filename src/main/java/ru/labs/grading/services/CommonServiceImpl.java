@@ -17,23 +17,23 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Service
 public class CommonServiceImpl implements CommonService {
 
-    private final ManagedChannel managedChannel;
+    private final AverageRatingServiceGrpc.AverageRatingServiceBlockingStub averageRatingServiceBlockingStub;
+
+    private final FileServiceGrpc.FileServiceStub fileServiceStub;
 
     @Autowired
     public CommonServiceImpl(ManagedChannel managedChannel) {
-        this.managedChannel = managedChannel;
+        this.averageRatingServiceBlockingStub = AverageRatingServiceGrpc.newBlockingStub(managedChannel);
+        this.fileServiceStub = FileServiceGrpc.newStub(managedChannel);
     }
 
     @Override
     public Double getAverageRating(String taskId) {
-        AverageRatingServiceGrpc.AverageRatingServiceBlockingStub stub =
-                AverageRatingServiceGrpc.newBlockingStub(managedChannel);
-
         AverageRatingServiceOuterClass.AverageRatingRequest request = AverageRatingServiceOuterClass.AverageRatingRequest
                 .newBuilder()
                 .setTaskId(taskId)
                 .build();
-        AverageRatingServiceOuterClass.AverageRatingResponse response = stub.getAverageRatingByTaskId(request);
+        AverageRatingServiceOuterClass.AverageRatingResponse response = averageRatingServiceBlockingStub.getAverageRatingByTaskId(request);
         return response.getAverageRating();
     }
 
@@ -42,7 +42,6 @@ public class CommonServiceImpl implements CommonService {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final CountDownLatch finishLatch = new CountDownLatch(1);
         final AtomicBoolean completed = new AtomicBoolean(false);
-        final FileServiceGrpc.FileServiceStub nonBlockingStub = FileServiceGrpc.newStub(managedChannel);
         log.info("Start download file with taskId :: {}", taskId);
         StreamObserver<DataChunk> streamObserver = new StreamObserver<DataChunk>() {
             @Override
@@ -73,7 +72,7 @@ public class CommonServiceImpl implements CommonService {
             DownloadFileRequest.Builder builder = DownloadFileRequest
                     .newBuilder()
                     .setTaskId(taskId);
-            nonBlockingStub.downloadFile(builder.build(), streamObserver);
+            fileServiceStub.downloadFile(builder.build(), streamObserver);
             finishLatch.await(5, TimeUnit.MINUTES);
             if (!completed.get()) {
                 throw new Exception("The downloadFile() method did not complete");

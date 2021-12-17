@@ -54,6 +54,6 @@ public class StudentCheckingController {
             return "Incorrect rating. Set rating from 2 to 5";
         }
         String responseFromServer = studentService.postRatingByEvaluationDTO(evaluationDTO);
-        return "you have rated the task" + responseFromServer;
+        return "you have rated the task " + responseFromServer;
     }
 }

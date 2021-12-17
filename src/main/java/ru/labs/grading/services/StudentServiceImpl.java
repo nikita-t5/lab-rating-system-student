@@ -22,68 +22,44 @@ import java.util.UUID;
 @Service
 public class StudentServiceImpl implements StudentService {
 
-    private final ManagedChannel managedChannel;
+    private final MinRatingServiceGrpc.MinRatingServiceBlockingStub minRatingServiceBlockingStub;
+
+    private final PostRatingServiceGrpc.PostRatingServiceBlockingStub postRatingServiceBlockingStub;
+
+    private final FileUploadServiceGrpc.FileUploadServiceStub fileUploadServiceStub;
+
 
     @Autowired
     public StudentServiceImpl(ManagedChannel managedChannel) {
-        this.managedChannel = managedChannel;
+        this.minRatingServiceBlockingStub = MinRatingServiceGrpc.newBlockingStub(managedChannel);
+        this.postRatingServiceBlockingStub = PostRatingServiceGrpc.newBlockingStub(managedChannel);
+        this.fileUploadServiceStub = FileUploadServiceGrpc.newStub(managedChannel);
     }
-
-//    @Override
-//    public void sayHello() {
-    //создали канал передачи и приема данными
-//        ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:8090")
-//                .usePlaintext()
-//                .build();
-
-    //создание объекта stab - на нем делаем удаленные запросы
-    //stub сделает вызов метода по сети и вернет ответ
-//        GreetingServiceGrpc.GreetingServiceBlockingStub stub =
-//                GreetingServiceGrpc.newBlockingStub(managedChannel);
-//        //создаем объект реквеста
-//        GreetingServiceOuterClass.HelloRequest request = GreetingServiceOuterClass.HelloRequest
-//                .newBuilder()
-//                .setName("Ivan")
-//                .build();
-//        //удаленный вызов процедуры
-//        GreetingServiceOuterClass.HelloResponse response = stub.greeting(request);
-//
-//        System.out.println(response);
-////        channel.shutdownNow();
-//    }
-
 
     @Override
     public List<String> getMinRatingTask() {
-        MinRatingServiceGrpc.MinRatingServiceBlockingStub stub =
-                MinRatingServiceGrpc.newBlockingStub(managedChannel);
         MinRatingServiceOuterClass.MinRatingResponse response =
-                stub.getMinRatingList(Empty.newBuilder().build());
+                minRatingServiceBlockingStub.getMinRatingList(Empty.newBuilder().build());
         return response.getTaskIdList();
     }
 
     @Override
     public String postRatingByEvaluationDTO(EvaluationDTO evaluationDTO) {
-        PostRatingServiceGrpc.PostRatingServiceBlockingStub stub =
-                PostRatingServiceGrpc.newBlockingStub(managedChannel);
         PostRatingServiceOuterClass.PostRatingRequest request = PostRatingServiceOuterClass.PostRatingRequest
                 .newBuilder()
                 .setTaskId(evaluationDTO.getTaskId())
                 .setAppraiserFullName(evaluationDTO.getAppraiserFullName())
                 .setRating(evaluationDTO.getRating())
                 .build();
-        PostRatingServiceOuterClass.PostRatingResponse response = stub.postRatingByEvaluationDto(request);
+        PostRatingServiceOuterClass.PostRatingResponse response = postRatingServiceBlockingStub.postRatingByEvaluationDto(request);
         return response.getTaskIdResponse();
     }
-
 
     @SneakyThrows
     @Override
     public String postFile(MultipartFile file, String developerFullName) {
-        FileUploadServiceGrpc.FileUploadServiceStub stub = FileUploadServiceGrpc.newStub(managedChannel);
-        StreamObserver<FileUploadRequest> streamObserver = stub.uploadFile(new FileUploadObserver());
+        StreamObserver<FileUploadRequest> streamObserver = fileUploadServiceStub.uploadFile(new FileUploadObserver());
 
-        //разделить название файла для выделения его типа
         final String[] fileNameAndType = Objects.requireNonNull(file.getOriginalFilename()).split("\\."); // Разделения строки str с помощью метода split()
 
         final String taskId = UUID.randomUUID().toString();
