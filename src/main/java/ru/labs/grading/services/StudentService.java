@@ -1,7 +1,7 @@
-package ru.labs.grading.controllers.student.services;
+package ru.labs.grading.services;
 
 import org.springframework.web.multipart.MultipartFile;
-import ru.labs.grading.controllers.student.dto.EvaluationDTO;
+import ru.labs.grading.dto.EvaluationDTO;
 
 import java.util.List;
 

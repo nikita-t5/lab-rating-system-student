@@ -1,12 +1,12 @@
-package ru.labs.grading.controllers.student.controllers;
+package ru.labs.grading.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.labs.grading.controllers.student.services.CommonService;
-import ru.labs.grading.controllers.student.services.StudentService;
+import ru.labs.grading.services.CommonService;
+import ru.labs.grading.services.StudentService;
 
 @Slf4j
 @RestController

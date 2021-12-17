@@ -1,4 +1,4 @@
-package ru.labs.grading.controllers.student.dto;
+package ru.labs.grading.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;

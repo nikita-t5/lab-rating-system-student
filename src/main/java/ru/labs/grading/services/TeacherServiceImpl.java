@@ -1,15 +1,12 @@
-package ru.labs.grading.controllers.student.services;
+package ru.labs.grading.services;
 
 import com.google.protobuf.Empty;
 import io.grpc.ManagedChannel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.labs.grading.EvaluationTaskServiceGrpc;
-import ru.labs.grading.EvaluationTaskServiceOuterClass;
-import ru.labs.grading.TaskServiceGrpc;
-import ru.labs.grading.TaskServiceOuterClass;
-import ru.labs.grading.controllers.student.dto.EvaluationDTO;
-import ru.labs.grading.controllers.student.dto.LoadedTaskDTO;
+import ru.labs.grading.*;
+import ru.labs.grading.dto.EvaluationDTO;
+import ru.labs.grading.dto.LoadedTaskDTO;
 
 import java.util.ArrayList;
 import java.util.List;

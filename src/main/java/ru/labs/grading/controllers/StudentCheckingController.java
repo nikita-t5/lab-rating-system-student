@@ -1,4 +1,4 @@
-package ru.labs.grading.controllers.student.controllers;
+package ru.labs.grading.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ContentDisposition;
@@ -6,9 +6,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.labs.grading.controllers.student.dto.EvaluationDTO;
-import ru.labs.grading.controllers.student.services.CommonService;
-import ru.labs.grading.controllers.student.services.StudentService;
+import ru.labs.grading.dto.EvaluationDTO;
+import ru.labs.grading.services.CommonService;
+import ru.labs.grading.services.StudentService;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;

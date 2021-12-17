@@ -1,4 +1,4 @@
-package ru.labs.grading.controllers.student.services;
+package ru.labs.grading.services;
 
 import java.io.ByteArrayOutputStream;
 

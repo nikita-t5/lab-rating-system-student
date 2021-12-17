@@ -1,4 +1,4 @@
-package ru.labs.grading.controllers.student.configs;
+package ru.labs.grading.configs;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 public class Configuration {
 
     @Bean
-    public ManagedChannel managedChannel(){
+    public ManagedChannel managedChannel() {
         return ManagedChannelBuilder.forTarget("localhost:8090")
                 .usePlaintext()
                 .build();

@@ -1,4 +1,4 @@
-package ru.labs.grading.controllers.student.services;
+package ru.labs.grading.services;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.labs.grading.*;
-import ru.labs.grading.controllers.student.dto.EvaluationDTO;
+import ru.labs.grading.dto.EvaluationDTO;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
@@ -31,13 +31,13 @@ public class StudentServiceImpl implements StudentService {
 
 //    @Override
 //    public void sayHello() {
-        //создали канал передачи и приема данными
+    //создали канал передачи и приема данными
 //        ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:8090")
 //                .usePlaintext()
 //                .build();
 
-        //создание объекта stab - на нем делаем удаленные запросы
-        //stub сделает вызов метода по сети и вернет ответ
+    //создание объекта stab - на нем делаем удаленные запросы
+    //stub сделает вызов метода по сети и вернет ответ
 //        GreetingServiceGrpc.GreetingServiceBlockingStub stub =
 //                GreetingServiceGrpc.newBlockingStub(managedChannel);
 //        //создаем объект реквеста
@@ -58,7 +58,7 @@ public class StudentServiceImpl implements StudentService {
         MinRatingServiceGrpc.MinRatingServiceBlockingStub stub =
                 MinRatingServiceGrpc.newBlockingStub(managedChannel);
         MinRatingServiceOuterClass.MinRatingResponse response =
-                stub.getAverageRatingByTaskId(Empty.newBuilder().build());
+                stub.getMinRatingList(Empty.newBuilder().build());
         return response.getTaskIdList();
     }
 
